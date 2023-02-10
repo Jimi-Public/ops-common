@@ -29,6 +29,13 @@ func NewToken(f ...func(token *Token)) TokenInterface {
 	for _, i := range f {
 		i(t)
 	}
+	// 未赋值则初始化
+	if t.ExpireTime == 0 {
+		t.ExpireTime = 24
+	}
+	if t.JwtSecret == "" {
+		t.JwtSecret = "secret"
+	}
 	return t
 }
 
