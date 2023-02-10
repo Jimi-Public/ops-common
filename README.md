@@ -21,7 +21,7 @@ claims,err := t.ParseToken(token) # 传入token解析  返回反序列化,及err
 // 示例
 r := g.New()
 r.GET("/ping", func(c *gin.Context) {
-    response.Resp(c,response.SuccessCode,"",response.&Ddata{"Total":1,"Items":["1"]})
+    response.Resp(c,response.SuccessCode,"",response.&Data{"Total":1,"Items":["1"]})
 })
 
 ```
