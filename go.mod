@@ -1,4 +1,4 @@
-module ops-common
+module github.com/Jimi-Public/ops-common
 
 go 1.19
 
