@@ -15,7 +15,7 @@ import (
 )
 
 type TokenInterface interface {
-	GenerateToken(username string) (string, error)
+	GenerateToken(id int) (string, error)
 	ParseToken(token string) (*Claims, error)
 }
 
@@ -32,12 +32,14 @@ func NewToken(f ...func(token *Token)) TokenInterface {
 	return t
 }
 
+// OptionWithJwtSecret 设置加密salt
 func OptionWithJwtSecret(s string) func(token *Token) {
 	return func(token *Token) {
 		token.JwtSecret = s
 	}
 }
 
+// OptionWithExpireTime 设置Token过期时间(单位: 小时)
 func OptionWithExpireTime(t int) func(token *Token) {
 	return func(token *Token) {
 		token.ExpireTime = t
@@ -45,16 +47,17 @@ func OptionWithExpireTime(t int) func(token *Token) {
 }
 
 type Claims struct {
-	Username string `json:"username"`
+	UserID int `json:"user_id"`
 	jwt.StandardClaims
 }
 
-func (t *Token) GenerateToken(username string) (string, error) {
+// GenerateToken 生成Token
+func (t *Token) GenerateToken(id int) (string, error) {
 	nowTime := time.Now()
 	expireTime := nowTime.Add(time.Duration(t.ExpireTime) * time.Hour)
 
 	claims := Claims{
-		Username: username,
+		UserID: id,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expireTime.Unix(),
 			Issuer:    "jimi-ops",
@@ -67,6 +70,7 @@ func (t *Token) GenerateToken(username string) (string, error) {
 	return token, err
 }
 
+// ParseToken 解析Token
 func (t *Token) ParseToken(token string) (*Claims, error) {
 	tokenClaims, err := jwt.ParseWithClaims(token, &Claims{}, func(token *jwt.Token) (interface{}, error) {
 		return t.JwtSecret, nil

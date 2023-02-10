@@ -27,13 +27,6 @@ type Data struct {
 	Items interface{} `json:"items"`
 }
 
-const (
-	SuccessCode   Code = 20000 // 成功状态码
-	ForbiddenCode Code = 21000 // 操作拒绝
-	FailCode      Code = 22000 // 操作失败 后端异常
-	AuthFail      Code = 40300 // 认证失败
-)
-
 func Resp(ctx *gin.Context, code Code, message string, data Data) {
 	r := newResponse(code, message, data)
 	ctx.JSON(200, r)
