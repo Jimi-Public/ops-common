@@ -11,11 +11,17 @@
 // jwt.OptionWithJwtSecret()
 t := NewToken()
 token,err := t.GenerateToken(userid)// 传入userid 返回token,err
-claims,err := t.ParseToken(token) # 传入token解析  返回反序列化,及err
+claims,err := t.ParseToken(token) // 传入token解析  返回反序列化,及err
+
+-------------------
+// Gin 使用
+r := g.New()
+r.Use(jwt.JWTMiddleware()) // 注册中间件
+r.Run()
 
   ```
 
-- ***Respoes**
+- **Respoes**
   - 返回统一结构体
 ```go
 // 示例
@@ -31,7 +37,7 @@ r.GET("/ping", func(c *gin.Context) {
   -  输出路径统一为`pwd`/logs/
 ```go
 g := gin.New()
-g.Use(log.TraceIDMiddleware())
+g.Use(log.TraceIDMiddleware()) // 注册中间件
 
 g.GET("/ping", func(c *gin.Context) {
     c.String(200, "pong")
