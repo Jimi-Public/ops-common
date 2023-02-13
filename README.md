@@ -45,7 +45,7 @@ g.GET("/ping", func(c *gin.Context) {
 })
 ```
 
-- **Client**
+- **HTTP Client**
 
 | 调用第三方服务(除了自身以外), 集成log trace_id 跨服务调用串联
 
@@ -92,9 +92,9 @@ func gin2() {
 }
 
 /* 日志输出 trace_id 一致
-{"file":"D:/workespaces/jimi/ops-common/main.go:26","func":"main.main.func1","level":"info","message":"aaa","time":"2023-02-13 19:59:34.397","trace_id":"64569c6a-6e2f-4f30-bd69-fde105b49c92"}
+{"func":"main.main.func1","level":"info","message":"aaa","trace_id":"64569c6a-6e2f-4f30-bd69-fde105b49c92"}
 
-{"file":"D:/workespaces/jimi/ops-common/main.go:39","func":"main.gin2.func1","level":"info","message":"aaa gin2","time":"2023-02-13 19:59:36.455","trace_id":"64569c6a-6e2f-4f30-bd69-fde105b49c92"}
+{"func":"main.gin2.func1","level":"info","message":"aaa gin2","trace_id":"64569c6a-6e2f-4f30-bd69-fde105b49c92"}
 
 
 */

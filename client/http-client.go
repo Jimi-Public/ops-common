@@ -24,8 +24,9 @@ type HttpClientBuilder interface {
 	SetMethod(method string) HttpClientBuilder
 	SetHeader(key, value string) HttpClientBuilder
 	SetUrl(url string) HttpClientBuilder
-	Build(ctx context.Context) (*http.Response, error)
 	SetContext(ctx context.Context) HttpClientBuilder
+	SetRequest(req *http.Request) HttpClientBuilder
+	Build(ctx context.Context) (*http.Response, error)
 }
 
 type requestBuilder struct {
@@ -34,30 +35,18 @@ type requestBuilder struct {
 	method  string            // 请求方法
 	body    string            // 请求体
 	ctx     context.Context   // 上下文
-	client  *http.Client
+	req     *http.Request
 }
-
-// NewRequestBuilder 返回一个 RequestBuilder 实例
-// 默认Method 是 GET
-// Context 取出Token, Trace-id 透传
-//func NewRequestBuilder(ctx context.Context) HttpClientBuilder {
-//	var rb = &requestBuilder{
-//		Method:  http.MethodGet,
-//		Headers: make(map[string]string),
-//		Context: ctx,
-//	}
-//	// Context 中获取Token 透传
-//	token := ctx.Value(jwt.AuthHeader).(string)
-//	rb.SetHeader(jwt.AuthHeader, token)
-//	//  Context 中获取Trace-id 透传
-//	id := ctx.Value(log.TraceName).(string)
-//	rb.SetHeader(log.TraceName, id)
-//	return rb
-//}
 
 // SetMethod 设置请求方法
 func (b *requestBuilder) SetMethod(method string) HttpClientBuilder {
 	b.method = method
+	return b
+}
+
+// SetRequest 自定义Request
+func (b *requestBuilder) SetRequest(req *http.Request) HttpClientBuilder {
+	b.req = req
 	return b
 }
 
@@ -89,11 +78,17 @@ func (b *requestBuilder) SetContext(ctx context.Context) HttpClientBuilder {
 }
 
 func (b *requestBuilder) Build(ctx context.Context) (*http.Response, error) {
-	b.client = &http.Client{}
-	req, err := http.NewRequest(b.method, b.url, bytes.NewBuffer([]byte(b.body)))
-	if err != nil {
-		return nil, err
+	c := &http.Client{
+		Transport: http.DefaultTransport,
 	}
+	if b.req == nil {
+		var err error
+		b.req, err = http.NewRequest(b.method, b.url, bytes.NewBuffer([]byte(b.body)))
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	if b.ctx != nil {
 		// Context 中获取Token 透传
 		if token := ctx.Value(jwt.AuthHeader); token != nil {
@@ -105,7 +100,7 @@ func (b *requestBuilder) Build(ctx context.Context) (*http.Response, error) {
 		}
 	}
 	for k, v := range b.headers {
-		req.Header.Add(k, v)
+		b.req.Header.Add(k, v)
 	}
-	return b.client.Do(req)
+	return c.Do(b.req)
 }
