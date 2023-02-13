@@ -16,10 +16,12 @@ import (
 	"github.com/Jimi-Public/ops-common/response"
 )
 
+const AuthHeader = "Authorization"
+
 func JWTMiddleware() gin.HandlerFunc {
 	j := NewToken()
 	return func(c *gin.Context) {
-		authHeader := c.Request.Header.Get("Authorization")
+		authHeader := c.Request.Header.Get(AuthHeader)
 		if authHeader == "" {
 			response.Resp(c, response.AuthFail, "Authentication failure", response.Data{})
 			c.Abort()
