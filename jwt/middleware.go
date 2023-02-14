@@ -18,6 +18,7 @@ import (
 
 const AuthHeader = "Authorization"
 
+// JWTMiddleware TODO  RBAC 认证。 用户认证和接口鉴权
 func JWTMiddleware() gin.HandlerFunc {
 	j := NewToken()
 	return func(c *gin.Context) {
@@ -42,7 +43,7 @@ func JWTMiddleware() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
-
+		// Context 插入 上下文
 		c.Set("claims", tokenClaims)
 		c.Next()
 	}

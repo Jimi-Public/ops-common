@@ -86,6 +86,7 @@ func TraceIDMiddleware() gin.HandlerFunc {
 	}
 }
 
+// TraceLoggerHook Hook log 上下取出trace_id
 type TraceLoggerHook struct {
 	Trace string
 }

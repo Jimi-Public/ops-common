@@ -26,7 +26,7 @@ type HttpClientBuilder interface {
 	SetUrl(url string) HttpClientBuilder
 	SetContext(ctx context.Context) HttpClientBuilder
 	SetRequest(req *http.Request) HttpClientBuilder
-	Build(ctx context.Context) (*http.Response, error)
+	Build() (*http.Response, error)
 }
 
 type requestBuilder struct {
@@ -77,7 +77,7 @@ func (b *requestBuilder) SetContext(ctx context.Context) HttpClientBuilder {
 	return b
 }
 
-func (b *requestBuilder) Build(ctx context.Context) (*http.Response, error) {
+func (b *requestBuilder) Build() (*http.Response, error) {
 	c := &http.Client{
 		Transport: http.DefaultTransport,
 	}
@@ -91,11 +91,11 @@ func (b *requestBuilder) Build(ctx context.Context) (*http.Response, error) {
 
 	if b.ctx != nil {
 		// Context 中获取Token 透传
-		if token := ctx.Value(jwt.AuthHeader); token != nil {
+		if token := b.ctx.Value(jwt.AuthHeader); token != nil {
 			b.SetHeader(jwt.AuthHeader, token.(string))
 		}
 		//  Context 中获取Trace-id 透传
-		if id := ctx.Value(log.TraceName); id != nil {
+		if id := b.ctx.Value(log.TraceName); id != nil {
 			b.SetHeader(log.TraceName, id.(string))
 		}
 	}
