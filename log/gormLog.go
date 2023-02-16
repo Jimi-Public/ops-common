@@ -18,7 +18,7 @@ import (
 	"gorm.io/gorm/logger"
 )
 
-var DeaultGormLogs = NewLogrusLogger(DeaultLogs.Log)
+var DefaultGormLogs = NewLogrusLogger(DefaultLogs.Log)
 
 // LogrusLogger implements the gorm logger interface using logrus
 type LogrusLogger struct {
