@@ -20,6 +20,7 @@ const AuthHeader = "Authorization"
 
 // JWTMiddleware TODO  RBAC 认证。 用户认证和接口鉴权
 func JWTMiddleware() gin.HandlerFunc {
+	// FIXME 生成token 设置secret 在这里可能拿不到, 故使用默认值
 	j := NewToken()
 	return func(c *gin.Context) {
 		authHeader := c.Request.Header.Get(AuthHeader)
