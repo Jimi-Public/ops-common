@@ -80,7 +80,7 @@ func (t *Token) GenerateToken(id int) (string, error) {
 // ParseToken 解析Token
 func (t *Token) ParseToken(token string) (*Claims, error) {
 	tokenClaims, err := jwt.ParseWithClaims(token, &Claims{}, func(token *jwt.Token) (interface{}, error) {
-		return t.JwtSecret, nil
+		return []byte(t.JwtSecret), nil
 	})
 
 	if tokenClaims != nil {
