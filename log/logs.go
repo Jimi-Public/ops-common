@@ -22,7 +22,7 @@ import (
 
 const TraceName = "trace_id"
 
-var DeaultLogs = NewLog()
+var DefaultLogs = NewLog()
 
 type Log struct {
 	Log *logrus.Logger
@@ -81,7 +81,7 @@ func TraceIDMiddleware() gin.HandlerFunc {
 			traceID = uuid.NewV4().String()
 		}
 		c.Set(TraceName, traceID)
-		DeaultLogs.Log.AddHook(NewLoggerHook(traceID))
+		DefaultLogs.Log.AddHook(NewLoggerHook(traceID))
 		c.Next()
 	}
 }
