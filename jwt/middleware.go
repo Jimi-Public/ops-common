@@ -44,6 +44,10 @@ func JWTMiddleware() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
+		if tokenClaims.ExpiresAt < time.Now().Unix() {
+			response.Resp(c, response.TokenExpire, "Token is Expire", response.Data{})
+			c.Abort()
+		}
 		// Context 插入 上下文
 		c.Set("claims", tokenClaims)
 		c.Next()
