@@ -10,6 +10,7 @@ package jwt
 
 import (
 	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
 
@@ -17,6 +18,8 @@ import (
 )
 
 const AuthHeader = "Authorization"
+const ContextClaims = "claims"
+const ContextAccountName = "AccountName"
 
 // JWTMiddleware TODO  RBAC 认证。 用户认证和接口鉴权
 func JWTMiddleware() gin.HandlerFunc {
@@ -49,7 +52,8 @@ func JWTMiddleware() gin.HandlerFunc {
 			c.Abort()
 		}
 		// Context 插入 上下文
-		c.Set("claims", tokenClaims)
+		c.Set(ContextClaims, tokenClaims)
+		c.Set(ContextAccountName, tokenClaims.AccountName)
 		c.Next()
 	}
 }

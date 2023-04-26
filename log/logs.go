@@ -46,7 +46,7 @@ func NewLog() *Log {
 		//PrettyPrint:      false,
 	}
 	logPath, _ := os.Getwd() // 后期可以配置
-	logName := fmt.Sprintf("%s/logs/access.Log", logPath)
+	logName := fmt.Sprintf("%s/logs/access.log", logPath)
 	writer, _ := rotatelogs.New(logName+"_%Y%m%d",
 		// WithLinkName为最新的日志建立软连接,以方便随着找到当前日志文件
 		rotatelogs.WithLinkName(logName),
