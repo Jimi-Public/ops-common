@@ -54,17 +54,19 @@ func OptionWithExpireTime(t int) func(token *Token) {
 }
 
 type Claims struct {
-	UserID int `json:"user_id"`
+	UserID      int    `json:"user_id"`
+	AccountName string `json:"account_name"`
 	jwt.StandardClaims
 }
 
 // GenerateToken 生成Token
-func (t *Token) GenerateToken(id int) (string, error) {
+func (t *Token) GenerateToken(id int, accountName string) (string, error) {
 	nowTime := time.Now()
 	expireTime := nowTime.Add(time.Duration(t.ExpireTime) * time.Hour)
 
 	claims := Claims{
-		UserID: id,
+		UserID:      id,
+		AccountName: accountName,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expireTime.Unix(),
 			Issuer:    "jimi-ops",
