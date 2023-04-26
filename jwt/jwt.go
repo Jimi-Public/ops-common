@@ -15,7 +15,7 @@ import (
 )
 
 type TokenInterface interface {
-	GenerateToken(id int) (string, error)
+	GenerateToken(id int, accountName string) (string, error)
 	ParseToken(token string) (*Claims, error)
 }
 
