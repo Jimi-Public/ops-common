@@ -54,6 +54,7 @@ func JWTMiddleware() gin.HandlerFunc {
 		// Context 插入 上下文
 		c.Set(ContextClaims, tokenClaims)
 		c.Set(ContextAccountName, tokenClaims.AccountName)
+		c.Set(AuthHeader, authHeader)
 		c.Next()
 	}
 }

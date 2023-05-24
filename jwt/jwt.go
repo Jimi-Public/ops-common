@@ -90,6 +90,5 @@ func (t *Token) ParseToken(token string) (*Claims, error) {
 			return claims, nil
 		}
 	}
-
 	return nil, err
 }
